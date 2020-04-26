@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { client } from "../client";
+import client from "../client";
 import { FetchResult } from "../types";
 
 export const useShow = (id: string): FetchResult => {
@@ -14,7 +14,6 @@ export const useShow = (id: string): FetchResult => {
       .then(({ data }) => setData(data))
       .catch((error) => {
         setError(error);
-        console.error(error);
       })
       .finally(() => setLoading(false));
   }, [id]);

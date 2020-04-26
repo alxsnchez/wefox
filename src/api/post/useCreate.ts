@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { client } from "../client";
+import client from "../client";
 import { Post } from "./types";
 import { FetchResult } from "../types";
 
@@ -15,7 +15,6 @@ export const useCreate = (): [(post: Post) => void, FetchResult] => {
       .then(({ data }) => setData(data))
       .catch((error) => {
         setError(error);
-        console.error(error);
       })
       .finally(() => setLoading(false));
   };

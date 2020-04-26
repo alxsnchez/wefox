@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { client } from "../client";
+import client from "../client";
 import { FetchResult } from "../types";
 
 export const useRemove = (): [(id: string) => void, FetchResult] => {
@@ -11,10 +11,9 @@ export const useRemove = (): [(id: string) => void, FetchResult] => {
     setLoading(true);
     client
       .delete(`/posts/${id}`)
-      .then(({ data }) => setData(data))
+      .then(({ data }) => setData(null))
       .catch((error) => {
         setError(error);
-        console.error(error);
       })
       .finally(() => setLoading(false));
   };
