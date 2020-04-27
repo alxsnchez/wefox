@@ -7,11 +7,17 @@ import AspectRatio from "../AspectRatio";
 import Modal, { ModalTitle, ModalActions, ModalContent } from "../Modal";
 import { StoreContext } from "../../store/Store.context";
 import { addPost, editPost, closeModal } from "../../store/Store.actions";
+import * as Yup from "yup";
 
 interface Props {
   open: boolean;
   onClose: () => void;
 }
+
+const PostSchema = Yup.object().shape({
+  title: Yup.string().required("Required"),
+  content: Yup.string().required("Required"),
+});
 
 const PostModal: React.FC<Props> = ({ open, onClose }) => {
   const {
@@ -23,7 +29,9 @@ const PostModal: React.FC<Props> = ({ open, onClose }) => {
   const editingPost = posts?.filter((item) => item.id === modal.postId)[0];
 
   const formik = useFormik({
+    validateOnMount: true,
     enableReinitialize: true,
+    validationSchema: PostSchema,
     initialValues: {
       title: "",
       content: "",
@@ -70,13 +78,13 @@ const PostModal: React.FC<Props> = ({ open, onClose }) => {
           />
           <Input
             name="title"
-            placeholder="Title"
+            placeholder="Title (Required)"
             onChange={formik.handleChange}
             value={formik.values.title}
           />
           <Textarea
             name="content"
-            placeholder="Describe this location"
+            placeholder="Describe this location (Required)"
             onChange={formik.handleChange}
             value={formik.values.content}
           />
@@ -103,7 +111,7 @@ const PostModal: React.FC<Props> = ({ open, onClose }) => {
         <Button
           variant="contained"
           onClick={formik.submitForm}
-          disabled={createLoading || updateLoading}
+          disabled={!formik.isValid || createLoading || updateLoading}
         >
           {modal.type === "create" ? "Create" : "Update"}
         </Button>

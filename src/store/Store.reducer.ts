@@ -61,6 +61,7 @@ const storeReducer = (state: any, action: ActionTypes) => {
       return {
         ...state,
         modal: {
+          ...state.modal,
           open: false,
         },
       };
