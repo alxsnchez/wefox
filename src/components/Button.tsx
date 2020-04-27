@@ -31,6 +31,9 @@ const BaseButton = styled.button<Props>`
         :hover {
           background-color: #f09600;
         }
+        :disabled {
+          background-color: #ffe0ab;
+        }
       `;
     }
 
@@ -40,6 +43,10 @@ const BaseButton = styled.button<Props>`
         background-color: transparent;
         :hover {
           background-color: #e7e7e7;
+        }
+        :disabled {
+          background-color: transparent;
+          color: #bebebe;
         }
       `;
     }

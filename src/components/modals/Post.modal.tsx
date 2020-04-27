@@ -5,7 +5,8 @@ import { useFormik } from "formik";
 import { Post } from "../../api/post";
 import AspectRatio from "../AspectRatio";
 import Modal, { ModalTitle, ModalActions, ModalContent } from "../Modal";
-import { StoreContext } from "../../Store";
+import { StoreContext } from "../../store/Store.context";
+import { addPost, editPost, closeModal } from "../../store/Store.actions";
 
 interface Props {
   open: boolean;
@@ -34,17 +35,12 @@ const PostModal: React.FC<Props> = ({ open, onClose }) => {
     onSubmit: async (values) => {
       if (modal.type === "create") {
         await createPost(values);
-        dispatch({ type: "ADD_POST", payload: values });
+        dispatch(addPost(values));
       } else if (modal.type === "edit" && modal.postId && editingPost) {
         await updatePost(modal.postId, values);
-        dispatch({
-          type: "EDIT_POST",
-          payload: { ...values, id: modal.postId },
-        });
+        dispatch(editPost({ ...values, id: modal.postId }));
       }
-      dispatch({
-        type: "CLOSE_MODAL",
-      });
+      dispatch(closeModal());
     },
   });
 

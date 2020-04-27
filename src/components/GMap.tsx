@@ -1,7 +1,8 @@
 import React, { useContext } from "react";
 import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
 import GoogleMapStyles from "../theme/GoogleMap.styles";
-import { StoreContext } from "../Store";
+import { StoreContext } from "../store/Store.context";
+import { openEditModal } from "../store/Store.actions";
 
 const center = { lat: 40.41678, lng: -3.70379 };
 
@@ -56,9 +57,7 @@ const GMap: React.FC<Props> = ({ locations }) => {
             key={location.id}
             position={location}
             icon={require("../icons/marker.png")}
-            onClick={() =>
-              dispatch({ type: "OPEN_EDIT_MODAL", payload: location.id })
-            }
+            onClick={() => dispatch(openEditModal(location.id))}
           />
         ))}
       </GoogleMap>
