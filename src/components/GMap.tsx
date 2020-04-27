@@ -1,14 +1,16 @@
-import React from "react";
+import React, { useContext } from "react";
 import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
 import GoogleMapStyles from "../theme/GoogleMap.styles";
+import { StoreContext } from "../Store";
 
 const center = { lat: 40.41678, lng: -3.70379 };
 
 interface Props {
-  locations: { lat: number; lng: number }[];
+  locations: { id: number; lat: number; lng: number }[];
 }
 
 const GMap: React.FC<Props> = ({ locations }) => {
+  const { dispatch } = useContext(StoreContext);
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_API_KEY,
   });
@@ -22,7 +24,7 @@ const GMap: React.FC<Props> = ({ locations }) => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          backgroundColor: "rgb(229, 227, 223)",
+          backgroundColor: "#c9c9c9",
         }}
       >
         There was an error loading the map.
@@ -50,7 +52,14 @@ const GMap: React.FC<Props> = ({ locations }) => {
         }}
       >
         {locations?.map((location) => (
-          <Marker position={location} icon={require("../icons/marker.png")} />
+          <Marker
+            key={location.id}
+            position={location}
+            icon={require("../icons/marker.png")}
+            onClick={() =>
+              dispatch({ type: "OPEN_EDIT_MODAL", payload: location.id })
+            }
+          />
         ))}
       </GoogleMap>
     );

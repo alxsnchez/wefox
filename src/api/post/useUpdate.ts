@@ -1,19 +1,27 @@
 import { useState } from "react";
 import client from "../client";
-import { Post } from "./types";
 import { FetchResult } from "../types";
 
+export interface PostUpdate {
+  id: number;
+  title: string;
+  content: string;
+  lat: string;
+  long: string;
+  image_url: string;
+}
+
 export const useUpdate = (): [
-  (id: string, post: Partial<Post>) => void,
+  (id: number, post: Partial<PostUpdate>) => Promise<any>,
   FetchResult
 ] => {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<any>(null);
 
-  const action = (id: string, post: Partial<Post>) => {
+  const action = (id: number, post: Partial<PostUpdate>) => {
     setLoading(true);
-    client
+    return client
       .put(`/posts/${id}`, post)
       .then(({ data }) => setData(data))
       .catch((error) => {
