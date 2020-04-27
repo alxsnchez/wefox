@@ -11,7 +11,7 @@ test("should remove single post data", async () => {
   const { result, waitForNextUpdate } = renderHook(() => useRemove());
 
   act(() => {
-    result.current[0]("1");
+    result.current[0](1);
   });
 
   expect(result.current[1].loading).toBeTruthy();
@@ -32,7 +32,7 @@ test("should throw error on remove single post data", async () => {
   const { result, waitForNextUpdate } = renderHook(() => useRemove());
 
   act(() => {
-    result.current[0]("1");
+    result.current[0](1);
   });
 
   expect(result.current[1].loading).toBeTruthy();

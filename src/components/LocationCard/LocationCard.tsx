@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
 import styled from "styled-components";
-import Button from "./Button";
-import AspectRatio from "./AspectRatio";
-import { StoreContext } from "../store/Store.context";
-import { Post as PostType } from "../store/Store.types";
-import { Post } from "../api/post";
-import { openEditModal, deletePost } from "../store/Store.actions";
+import Button from "../Button";
+import AspectRatio from "../AspectRatio";
+import { StoreContext } from "../../store/Store.context";
+import { Post as PostType } from "../../store/Store.types";
+import { Post } from "../../api/post";
+import { openEditModal, deletePost } from "../../store/Store.actions";
 
 interface Props {
   item: PostType;
@@ -15,11 +15,11 @@ const LocationCard: React.FC<Props> = ({ item }) => {
   const { dispatch } = useContext(StoreContext);
   const [removePost, { loading }] = Post.useRemove();
   return (
-    <Paper>
+    <Paper data-testid="location-paper">
       <AspectRatio ratio={9 / 16} src={item.image_url} alt={item.title} />
       <Content>
-        <Title>{item.title}</Title>
-        <Subtitle>{item.content}</Subtitle>
+        <Title data-testid="title">{item.title}</Title>
+        <Subtitle data-testid="content">{item.content}</Subtitle>
         <Actions>
           <Button
             style={{ marginRight: 8 }}

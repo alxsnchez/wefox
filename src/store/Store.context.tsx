@@ -1,8 +1,10 @@
 import React, { createContext, useReducer } from "react";
 import { State } from "./Store.types";
 import storeReducer from "./Store.reducer";
+import Modal from "../components/Modal";
+import { closeModal } from "./Store.actions";
 
-const initialState: State = {
+export const initialState: State = {
   posts: [],
   modal: {
     open: false,
@@ -23,6 +25,7 @@ export const StoreProvider: React.FC = ({ children }) => {
   return (
     <StoreContext.Provider value={{ state, dispatch }}>
       {children}
+      <Modal open={state.modal.open} onClose={() => dispatch(closeModal())} />
     </StoreContext.Provider>
   );
 };

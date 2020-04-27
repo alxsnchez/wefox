@@ -15,7 +15,7 @@ test("should update single post data", async () => {
   const { result, waitForNextUpdate } = renderHook(() => useUpdate());
 
   act(() => {
-    result.current[0]("1", mockedData);
+    result.current[0](1, mockedData);
   });
 
   expect(result.current[1].loading).toBeTruthy();
@@ -36,7 +36,7 @@ test("should throw error on update single post data", async () => {
   const { result, waitForNextUpdate } = renderHook(() => useUpdate());
 
   act(() => {
-    result.current[0]("1", mockedData);
+    result.current[0](1, mockedData);
   });
 
   expect(result.current[1].loading).toBeTruthy();

@@ -1,38 +1,44 @@
-import { renderHook } from "@testing-library/react-hooks";
-import { useList } from "./useList";
+import React from "react";
+import {
+  render,
+  screen,
+  fireEvent,
+  waitForElementToBeRemoved,
+} from "@testing-library/react";
+import { act } from "@testing-library/react-hooks";
+import { StoreProvider } from "./store/Store.context";
+import App from "./App";
 import MockAdapter from "axios-mock-adapter";
-import client from "../client";
+import client from "./api/client";
 
-test("should get all posts data", async () => {
+test("should render locations list", async () => {
   const spy = jest.spyOn(client, "get");
   const mockClient = new MockAdapter(client);
   mockClient.onGet("/posts").reply(200, mockedData);
 
-  const { result, waitForNextUpdate } = renderHook(() => useList());
+  render(
+    <StoreProvider>
+      <App />
+    </StoreProvider>
+  );
 
-  expect(result.current.loading).toBeTruthy();
-  await waitForNextUpdate();
-
+  await waitForElementToBeRemoved(() =>
+    screen.getByText(/loading your locations/i)
+  );
   expect(spy).toHaveBeenCalled();
-  expect(result.current.error).toBeNull();
-  expect(result.current.loading).toBeFalsy();
-  expect(result.current.data).toEqual(mockedData);
+  expect(screen.getAllByTestId(/location-paper/i).length).toEqual(3);
 });
 
-test("should throw error on get all posts data", async () => {
-  const spy = jest.spyOn(client, "get");
-  const mockClient = new MockAdapter(client);
-  mockClient.onGet("/posts").reply(400);
-
-  const { result, waitForNextUpdate } = renderHook(() => useList());
-
-  expect(result.current.loading).toBeTruthy();
-  await waitForNextUpdate();
-
-  expect(spy).toHaveBeenCalled();
-  expect(result.current.error).not.toBeNull();
-  expect(result.current.loading).toBeFalsy();
-  expect(result.current.data).toEqual(null);
+test("should open create post modal", () => {
+  render(
+    <StoreProvider>
+      <App />
+    </StoreProvider>
+  );
+  act(() => {
+    fireEvent.click(screen.getByText(/add location/i));
+  });
+  expect(screen.getByText(/create location/i)).toBeInTheDocument();
 });
 
 const mockedData = [

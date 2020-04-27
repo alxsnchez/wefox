@@ -14,7 +14,7 @@ export const useCreate = (): [
   (post: PostCreate) => Promise<any>,
   FetchResult
 ] => {
-  const [data, setData] = useState<any>();
+  const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<any>(null);
 
@@ -22,7 +22,10 @@ export const useCreate = (): [
     setLoading(true);
     return client
       .post("/posts", post)
-      .then(({ data }) => setData(data))
+      .then(({ data }) => {
+        setData(data);
+        return data;
+      })
       .catch((error) => {
         setError(error);
       })

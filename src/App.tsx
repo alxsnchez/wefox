@@ -2,12 +2,12 @@ import React, { useContext, useEffect } from "react";
 import GMap from "./components/GMap";
 import styled from "styled-components";
 import { Post } from "./api/post";
-import PostModal from "./components/modals/Post.modal";
 import Button from "./components/Button";
 import { StoreContext } from "./store/Store.context";
 import { Post as PostType } from "./store/Store.types";
 import LocationCard from "./components/LocationCard";
-import { listPosts, closeModal, openCreateModal } from "./store/Store.actions";
+import { listPosts, openCreateModal } from "./store/Store.actions";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 function getLocations(data: PostType[]) {
   return data?.map((item) => ({
@@ -19,10 +19,10 @@ function getLocations(data: PostType[]) {
 
 function App() {
   const {
-    state: { posts, modal },
+    state: { posts },
     dispatch,
   } = useContext(StoreContext);
-  const { data, loading } = Post.useList();
+  const { data, loading, error } = Post.useList();
 
   useEffect(() => {
     dispatch(listPosts(data));
@@ -30,7 +30,9 @@ function App() {
 
   return (
     <React.Fragment>
-      <GMap locations={getLocations(posts)} />
+      <ErrorBoundary>
+        <GMap locations={getLocations(posts)} />
+      </ErrorBoundary>
       <Container>
         <Row>
           <Headline>Your locations</Headline>
@@ -41,16 +43,20 @@ function App() {
             Add location
           </Button>
         </Row>
-        <Grid>
-          {posts?.map((item: PostType) => (
-            <LocationCard key={item.id} item={item} />
-          ))}
-        </Grid>
-        {loading && <Subtitle>Loading your locations...</Subtitle>}
-        {posts?.length < 1 && (
-          <Subtitle>Add new locations to see them here.</Subtitle>
-        )}
-        <PostModal open={modal.open} onClose={() => dispatch(closeModal())} />
+        <ErrorBoundary>
+          <Grid>
+            {posts?.map((item: PostType) => (
+              <LocationCard key={item.id} item={item} />
+            ))}
+          </Grid>
+          {loading && <Subtitle>Loading your locations...</Subtitle>}
+          {error && (
+            <Subtitle>There was an error loading your locations.</Subtitle>
+          )}
+          {posts?.length < 1 && (
+            <Subtitle>Add new locations to see them here.</Subtitle>
+          )}
+        </ErrorBoundary>
       </Container>
     </React.Fragment>
   );

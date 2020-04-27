@@ -23,7 +23,10 @@ export const useUpdate = (): [
     setLoading(true);
     return client
       .put(`/posts/${id}`, post)
-      .then(({ data }) => setData(data))
+      .then(({ data }) => {
+        setData(data);
+        return data;
+      })
       .catch((error) => {
         setError(error);
       })
